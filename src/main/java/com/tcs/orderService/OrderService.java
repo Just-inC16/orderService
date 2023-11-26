@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @Service
 public class OrderService {
 	@Bean
@@ -26,7 +28,7 @@ public class OrderService {
 		return new OrderDto(currentOrder.getId(), currentOrder.getNumber(), currentOrder.getName());
 	}
 
-//	@CircuitBreaker(name = "inventoryService", fallbackMethod = "fallbackMethod")
+	@CircuitBreaker(name = "inventoryService", fallbackMethod = "fallbackMethod")
 	public String getAvailability(Long id) {
 		return restTemplate().getForEntity("http://localhost:8081/inventory/" + id, String.class).getBody();
 	}
